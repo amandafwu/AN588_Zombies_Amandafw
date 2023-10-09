@@ -1,0 +1,8 @@
+---
+title: "Amandafw_OriginalHomeworkCode_03"
+author: "Amanda Wu"
+date: "2023-10-09"
+output: html_document
+---
+
+ZOMBIE HOMEWORK
