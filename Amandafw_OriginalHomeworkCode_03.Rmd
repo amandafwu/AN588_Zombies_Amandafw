@@ -34,13 +34,14 @@ pop_sd(h) #pop standard deviation is the square root of the pop variance
 mean(d$weight, na.rm = TRUE)
 h <- d$weight
 pop_v <- function(h) {
-    sum((h - mean(h))^2)/(length(h))
+    sum((h - mean(h))^2)/(length(h)) 
 }
 pop_v(h) 
 pop_sd <- function(h) {
     sqrt(pop_v(h))
 }
 pop_sd(h) 
+
 mean(d$age, na.rm = TRUE)
 h <- d$age
 pop_v <- function(h) {
@@ -51,6 +52,7 @@ pop_sd <- function(h) {
     sqrt(pop_v(h))
 }
 pop_sd(h) 
+
 mean(d$zombies_killed, na.rm = TRUE)
 h <- d$zombies_killed
 pop_v <- function(h) {
@@ -61,6 +63,7 @@ pop_sd <- function(h) {
     sqrt(pop_v(h))
 }
 pop_sd(h) 
+
 mean(d$years_of_education, na.rm = TRUE)
 h <- d$years_of_education
 pop_v <- function(h) {
@@ -73,3 +76,34 @@ pop_sd <- function(h) {
 pop_sd(h) 
 ```
 Notes: This code should give me the correct answer for mean and standard deviation but it seems tedious and long so i'm sure there's an easier way, however, i'm unsure how to calculate pop sd without using the sd function
+
+
+## Question 2
+```{r Question 2}
+#Use {ggplot} to make boxplots of each of these variables by gender.
+library(ggplot2)
+names(d)
+par(mfrow = c(1, 5))
+p <- ggplot(data = d, aes(x = gender, y = height))
+p <- p + geom_boxplot()
+p 
+
+p <- ggplot(data = d, aes(x = gender, y = weight))
+p <- p + geom_boxplot()
+p
+
+p <- ggplot(data = d, aes(x = gender, y = age))
+p <- p + geom_boxplot()
+p
+
+p <- ggplot(data = d, aes(x = gender, y = zombies_killed))
+p <- p + geom_boxplot()
+p <- p + ylab("Zombies Killed") + xlab("Gender")
+p
+
+p <- ggplot(data = d, aes(x = gender, y = years_of_education))
+p <- p + geom_boxplot()
+p <- p + ylab("Years of Education") + xlab("Gender")
+p
+```
+
