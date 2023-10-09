@@ -9,10 +9,67 @@ output: html_document
 ```{r Uploading Data}
 library(curl)
 f <- curl("https://github.com/fuzzyatelin/fuzzyatelin.github.io/blob/master/AN588_Fall23/zombies.csv")
-d <- read.csv(f, header = TRUE, sep = ",", stringsAsFactors = FALSE) #this is the typical path used in challenges but would give an error for me - "Error in open.connection(file, "rt") : Could not resolve host: github.com" 
+d <- read.csv(f, header = TRUE, sep = ",", stringsAsFactors = FALSE) #this is the typical path used in challenges but would give an error for me - "Error in open.connection(file, "rt")" or another error with the final code line
 #or 
 d <- read.csv("zombies.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE) #this seemed to be more effective
 head(d)
 summary(d)
 ```
 
+## Question 1
+```{r Question 1}
+#Calculate the population mean and standard deviation for each quantitative random variable (height, weight, age, number of zombies killed, and years of education). NOTE: You will not want to use the built in var() and sd() commands as these are for samples.
+names(d)
+mean(d$height, na.rm = TRUE) #the mean for heights
+h <- d$height
+pop_v <- function(h) {
+    sum((h - mean(h))^2)/(length(h))
+}
+pop_v(h) #calculates population variance (sum of squares divided by # of values)
+pop_sd <- function(h) {
+    sqrt(pop_v(h))
+}
+pop_sd(h) #pop standard deviation is the square root of the pop variance 
+
+mean(d$weight, na.rm = TRUE)
+h <- d$weight
+pop_v <- function(h) {
+    sum((h - mean(h))^2)/(length(h))
+}
+pop_v(h) 
+pop_sd <- function(h) {
+    sqrt(pop_v(h))
+}
+pop_sd(h) 
+mean(d$age, na.rm = TRUE)
+h <- d$age
+pop_v <- function(h) {
+    sum((h - mean(h))^2)/(length(h))
+}
+pop_v(h) 
+pop_sd <- function(h) {
+    sqrt(pop_v(h))
+}
+pop_sd(h) 
+mean(d$zombies_killed, na.rm = TRUE)
+h <- d$zombies_killed
+pop_v <- function(h) {
+    sum((h - mean(h))^2)/(length(h))
+}
+pop_v(h) 
+pop_sd <- function(h) {
+    sqrt(pop_v(h))
+}
+pop_sd(h) 
+mean(d$years_of_education, na.rm = TRUE)
+h <- d$years_of_education
+pop_v <- function(h) {
+    sum((h - mean(h))^2)/(length(h))
+}
+pop_v(h) 
+pop_sd <- function(h) {
+    sqrt(pop_v(h))
+}
+pop_sd(h) 
+```
+Notes: This code should give me the correct answer for mean and standard deviation but it seems tedious and long so i'm sure there's an easier way, however, i'm unsure how to calculate pop sd without using the sd function
