@@ -5,4 +5,14 @@ date: "2023-10-09"
 output: html_document
 ---
 
-ZOMBIE HOMEWORK
+##uploading data into R
+```{r Uploading Data}
+library(curl)
+f <- curl("https://github.com/fuzzyatelin/fuzzyatelin.github.io/blob/master/AN588_Fall23/zombies.csv")
+d <- read.csv(f, header = TRUE, sep = ",", stringsAsFactors = FALSE) #this is the typical path used in challenges but would give an error for me - "Error in open.connection(file, "rt") : Could not resolve host: github.com" 
+#or 
+d <- read.csv("zombies.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE) #this seemed to be more effective
+head(d)
+summary(d)
+```
+
