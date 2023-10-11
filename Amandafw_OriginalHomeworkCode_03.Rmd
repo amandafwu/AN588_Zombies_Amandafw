@@ -22,60 +22,24 @@ summary(d)
 names(d)
 mean(d$height, na.rm = TRUE) #the mean for heights
 h <- d$height
-pop_v <- function(h) {
-    sum((h - mean(h))^2)/(length(h))
-}
-pop_v(h) #calculates population variance (sum of squares divided by # of values)
-pop_sd <- function(h) {
-    sqrt(pop_v(h))
-}
-pop_sd(h) #pop standard deviation is the square root of the pop variance 
+sqrt(sum((h - mean(h))^2)/length(h)) #pop standard deviation is the square root of the pop variance; population variance is the sum of squares divided by # of values
 
 mean(d$weight, na.rm = TRUE)
-h <- d$weight
-pop_v <- function(h) {
-    sum((h - mean(h))^2)/(length(h)) 
-}
-pop_v(h) 
-pop_sd <- function(h) {
-    sqrt(pop_v(h))
-}
-pop_sd(h) 
+w <- d$weight
+sqrt(sum((w - mean(w))^2)/length(w)) #pop sd
 
 mean(d$age, na.rm = TRUE)
-h <- d$age
-pop_v <- function(h) {
-    sum((h - mean(h))^2)/(length(h))
-}
-pop_v(h) 
-pop_sd <- function(h) {
-    sqrt(pop_v(h))
-}
-pop_sd(h) 
+a <- d$age
+sqrt(sum((a - mean(a))^2)/length(a)) #pop sd
 
 mean(d$zombies_killed, na.rm = TRUE)
-h <- d$zombies_killed
-pop_v <- function(h) {
-    sum((h - mean(h))^2)/(length(h))
-}
-pop_v(h) 
-pop_sd <- function(h) {
-    sqrt(pop_v(h))
-}
-pop_sd(h) 
+z <- d$zombies_killed
+sqrt(sum((z - mean(z))^2)/length(z)) #pop sd
 
 mean(d$years_of_education, na.rm = TRUE)
-h <- d$years_of_education
-pop_v <- function(h) {
-    sum((h - mean(h))^2)/(length(h))
-}
-pop_v(h) 
-pop_sd <- function(h) {
-    sqrt(pop_v(h))
-}
-pop_sd(h) 
+y <- d$years_of_education
+sqrt(sum((y - mean(y))^2)/length(y)) #pop sd
 ```
-Notes: This code should give me the correct answer for mean and standard deviation but it seems tedious and long so i'm sure there's an easier way, however, i'm unsure how to calculate pop sd without using the sd function
 
 
 ## Question 2
@@ -83,27 +47,105 @@ Notes: This code should give me the correct answer for mean and standard deviati
 #Use {ggplot} to make boxplots of each of these variables by gender.
 library(ggplot2)
 names(d)
-par(mfrow = c(1, 5))
-p <- ggplot(data = d, aes(x = gender, y = height))
-p <- p + geom_boxplot()
-p 
 
-p <- ggplot(data = d, aes(x = gender, y = weight))
-p <- p + geom_boxplot()
-p
+h <- ggplot(data = d, aes(x = gender, y = height))
+h <- h + geom_boxplot()
+h <- h + ylab("Height") + xlab("Gender")
 
-p <- ggplot(data = d, aes(x = gender, y = age))
-p <- p + geom_boxplot()
-p
+w <- ggplot(data = d, aes(x = gender, y = weight))
+w <- w + geom_boxplot()
+w <- w + ylab("Weight") + xlab("Gender")
 
-p <- ggplot(data = d, aes(x = gender, y = zombies_killed))
-p <- p + geom_boxplot()
-p <- p + ylab("Zombies Killed") + xlab("Gender")
-p
+a <- ggplot(data = d, aes(x = gender, y = age))
+a <- a + geom_boxplot()
+a <- a + ylab("Age") + xlab("Gender")
 
-p <- ggplot(data = d, aes(x = gender, y = years_of_education))
-p <- p + geom_boxplot()
-p <- p + ylab("Years of Education") + xlab("Gender")
-p
+z <- ggplot(data = d, aes(x = gender, y = zombies_killed))
+z <- z + geom_boxplot()
+z <- z + ylab("Zombies Killed") + xlab("Gender")
+
+y <- ggplot(data = d, aes(x = gender, y = years_of_education))
+y <- y + geom_boxplot()
+y <- y + ylab("Years of Education") + xlab("Gender")
+
+library("gridExtra") #package i found to present all the graphs together
+grid.arrange(h, w, a, z, y, ncol = 2, nrow = 3) 
 ```
+Source: https://www.geeksforgeeks.org/draw-multiple-ggplot2-plots-side-by-side/
+Notes: the graphs look a little condensed though and I'm not too sure how to fix it or whether I should change it so each graph has their own space, however, the knitted code looks really long when I do this
+
+## Question 3
+```{r Question 3}
+#Use {ggplot} to make scatterplots of height and weight in relation to age. Do these variables seem to be related? In what way?
+p <- ggplot(data = d, aes(x = height, y = age)) #entering the data
+p <- p + xlab("Height") + ylab("Age")  #renaming the axis
+p <- p + geom_point()  #make a scatterplot
+p <- p + geom_smooth(method = "lm", fullrange = TRUE) #adding regression lines
+
+w <- ggplot(data = d, aes(x = weight, y = age)) #entering the data
+w <- w + xlab("Weight") + ylab("Age")  #renaming the axis
+w <- w + geom_point()  #make a scatterplot
+w <- w + geom_smooth(method = "lm", fullrange = TRUE)
+
+grid.arrange(p, w, ncol = 2)
+```
+There appears to be a more definitive correlation between height and age than weight and age but both variables generally increase with age. Both weight and height appears to be correlated with taller individuals typically having larger weights. 
+
+
+## Question 4
+```{r Question 4}
+#Using histograms and Q-Q plots, check whether the quantitative variables seem to be drawn from a normal distribution. Which seem to be and which do not (hint: not all are drawn from the normal distribution)? For those that are not normal, can you determine from which common distribution they are drawn?
+summary(d)
+#creating histogram & Q-Q plots with height:
+hist(d$height, breaks = seq(from = 50, to = 85, by = 1), probability = TRUE, xlab = "Height", main = "Histogram for Height") #the breaks were determined with summary(d) from the min and the max values
+qqnorm(d$height, main = "Q-Q plot for Height")
+qqline(d$height, col = "red")
+
+#histogram for weight
+hist(d$weight, breaks = seq(from = 85, to = 215, by = 1), probability = TRUE, xlab = "Weight", main = "Histogram for Weight")
+qqnorm(d$weight, main = "Q-Q plot for Weight")
+qqline(d$weight, col = "red")
+
+#histogram for zombies killed
+hist(d$zombies_killed, breaks = seq(from = -5, to = 15, by = 1), probability = TRUE, xlab = "Zombies Killed", main = "Histogram for Zombies Killed")
+qqnorm(d$zombies_killed, main = "Q-Q plot for Zombies Killed")
+qqline(d$zombies_killed, col = "red")
+
+#histogram for age
+hist(d$age, breaks = seq(from = 5, to = 35, by = 1), probability = TRUE, xlab = "Age", main = "Histogram for Age")
+qqnorm(d$age, main = "Q-Q plot for Age")
+qqline(d$age, col = "red")
+
+#histogram for years of education
+hist(d$years_of_education, breaks = seq(from = -5, to = 13, by = 1), probability = TRUE, xlab = "Years of Education", main = "Histogram for Years of Education")
+qqnorm(d$years_of_education, main = "Q-Q plot for Years of Education")
+qqline(d$years_of_education, col = "red")
+```
+Height, Weight, and Age appears to be drawn from a normal distribution as they seem to adhere towards the line in the qqplots. In addition, their histograms appear similar to the normal distribution. Years of Education and Zombies Killed did not seem to be drawn from a normal distribution as their qq plots were really different and their histograms appear more similar to poission distributions.
+
+
+## Question 5
+```{r Question 5}
+#Now use the sample() function to sample ONE subset of 30 zombie survivors (without replacement) from this population and calculate the mean and sample standard deviation for each variable. Also estimate the standard error for each variable, and construct the 95% confidence interval for each mean. Note that for the variables that are not drawn from the normal distribution, you may need to base your estimate of the CIs on slightly different code than for the normal…
+sh <- sample(d$height, 30, replace = FALSE)
+mean(sh)
+sqrt(sum((sh - mean(sh))^2)/length(sh)) 
+
+sw <- sample(d$weight, 30, replace = FALSE)
+mean(sw)
+sqrt(sum((sw - mean(sw))^2)/length(sw)) 
+
+sa <- sample(d$age, 30, replace = FALSE)
+mean(sa)
+sqrt(sum((sa - mean(sa))^2)/length(sa))
+
+sz <- sample(d$zombies_killed, 30, replace = FALSE)
+mean(sz)
+sqrt(sum((sz - mean(sz))^2)/length(sz))
+
+sy <- sample(d$years_of_education, 30, replace = FALSE)
+mean(sy)
+sqrt(sum((sy - mean(sy))^2)/length(sy))
+```
+
 
