@@ -127,25 +127,68 @@ Height, Weight, and Age appears to be drawn from a normal distribution as they s
 ## Question 5
 ```{r Question 5}
 #Now use the sample() function to sample ONE subset of 30 zombie survivors (without replacement) from this population and calculate the mean and sample standard deviation for each variable. Also estimate the standard error for each variable, and construct the 95% confidence interval for each mean. Note that for the variables that are not drawn from the normal distribution, you may need to base your estimate of the CIs on slightly different code than for the normal…
+#standard error is the standard deviation of the sampling distribution 
+set.seed(1) #makes sure that the sample doesn't change each time
 sh <- sample(d$height, 30, replace = FALSE)
-mean(sh)
-sqrt(sum((sh - mean(sh))^2)/length(sh)) 
+mean(sh) #mean
+sigma <- sqrt(sum((sh - mean(sh))^2)/length(sh)) #sample standard deviation
+sigma
+sh_se <- sqrt(sigma^2/30) #standard error
+sh_se
+upper <- mean(sh) + qnorm(0.975, mean = 0, sd = 1) * sh_se
+lower <- mean(sh) + qnorm(0.025, mean = 0, sd = 1) * sh_se  #ci with normal distribution
+ci <- c(lower, upper)
+ci
 
 sw <- sample(d$weight, 30, replace = FALSE)
 mean(sw)
-sqrt(sum((sw - mean(sw))^2)/length(sw)) 
+sigma <- sqrt(sum((sw - mean(sw))^2)/length(sw)) 
+sw_se <- sqrt(sigma^2/30) 
+sw_se
+upper <- mean(sw) + qnorm(0.975, mean = 0, sd = 1) * sw_se
+lower <- mean(sw) + qnorm(0.025, mean = 0, sd = 1) * sw_se  #ci with normal distribution
+ci <- c(lower, upper)
+ci
 
 sa <- sample(d$age, 30, replace = FALSE)
 mean(sa)
-sqrt(sum((sa - mean(sa))^2)/length(sa))
+sigma <- sqrt(sum((sa - mean(sa))^2)/length(sa))
+sa_se <- sqrt(sigma^2/30) 
+sa_se
+upper <- mean(sa) + qnorm(0.975, mean = 0, sd = 1) * sa_se
+lower <- mean(sa) + qnorm(0.025, mean = 0, sd = 1) * sa_se  #ci with normal distribution
+ci <- c(lower, upper)
+ci
 
 sz <- sample(d$zombies_killed, 30, replace = FALSE)
 mean(sz)
-sqrt(sum((sz - mean(sz))^2)/length(sz))
+sigma <- sqrt(sum((sz - mean(sz))^2)/length(sz))
+sz_se <- sqrt(sigma^2/30) 
+sz_se
+upper <- mean(sz) + qnorm(0.975, mean = 0, sd = 1) * sz_se
+lower <- mean(sz) + qnorm(0.025, mean = 0, sd = 1) * sz_se  #ci with normal distribution
+ci <- c(lower, upper)
+ci
 
 sy <- sample(d$years_of_education, 30, replace = FALSE)
 mean(sy)
-sqrt(sum((sy - mean(sy))^2)/length(sy))
+sigma <- sqrt(sum((sy - mean(sy))^2)/length(sy))
+sy_se <- sqrt(sigma^2/30) 
+sy_se
+upper <- mean(sy) + qnorm(0.975, mean = 0, sd = 1) * sy_se
+lower <- mean(sy) + qnorm(0.025, mean = 0, sd = 1) * sy_se  #ci with normal distribution
+ci <- c(lower, upper)
+ci
 ```
+Note: Feels really tedious and I know there's an easier way of doing it but unsure how to shorten the functions
+
+
+## Question 6
+```{r Question 6}
+#Now draw 99 more random samples of 30 zombie apocalypse survivors, and calculate the mean for each variable for each of these samples. Together with the first sample you drew, you now have a set of 100 means for each variable (each based on 30 observations), which constitutes a sampling distribution for each variable. What are the means and standard deviations of this distribution of means for each variable? How do the standard deviations of means compare to the standard errors estimated in [5]? What do these sampling distributions look like (a graph might help here)? Are they normally distributed? What about for those variables that you concluded were not originally drawn from a normal distribution?
+
+
+```
+
 
 

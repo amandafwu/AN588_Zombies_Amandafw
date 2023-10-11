@@ -562,31 +562,76 @@ histograms appear more similar to poission distributions.</p>
 <div id="question-5" class="section level2">
 <h2>Question 5</h2>
 <pre class="r"><code>#Now use the sample() function to sample ONE subset of 30 zombie survivors (without replacement) from this population and calculate the mean and sample standard deviation for each variable. Also estimate the standard error for each variable, and construct the 95% confidence interval for each mean. Note that for the variables that are not drawn from the normal distribution, you may need to base your estimate of the CIs on slightly different code than for the normal…
+#standard error is the standard deviation of the sampling distribution 
+set.seed(1) #makes sure that the sample doesn&#39;t change each time
 sh &lt;- sample(d$height, 30, replace = FALSE)
-mean(sh)</code></pre>
-<pre><code>## [1] 68.70807</code></pre>
-<pre class="r"><code>sqrt(sum((sh - mean(sh))^2)/length(sh)) </code></pre>
-<pre><code>## [1] 4.305747</code></pre>
+mean(sh) #mean</code></pre>
+<pre><code>## [1] 66.88522</code></pre>
+<pre class="r"><code>sigma &lt;- sqrt(sum((sh - mean(sh))^2)/length(sh)) #sample standard deviation
+sigma</code></pre>
+<pre><code>## [1] 3.672259</code></pre>
+<pre class="r"><code>sh_se &lt;- sqrt(sigma^2/30) #standard error
+sh_se</code></pre>
+<pre><code>## [1] 0.6704597</code></pre>
+<pre class="r"><code>upper &lt;- mean(sh) + qnorm(0.975, mean = 0, sd = 1) * sh_se
+lower &lt;- mean(sh) + qnorm(0.025, mean = 0, sd = 1) * sh_se  #ci with normal distribution
+ci &lt;- c(lower, upper)
+ci</code></pre>
+<pre><code>## [1] 65.57114 68.19929</code></pre>
 <pre class="r"><code>sw &lt;- sample(d$weight, 30, replace = FALSE)
 mean(sw)</code></pre>
-<pre><code>## [1] 146.008</code></pre>
-<pre class="r"><code>sqrt(sum((sw - mean(sw))^2)/length(sw)) </code></pre>
-<pre><code>## [1] 13.77496</code></pre>
+<pre><code>## [1] 149.5295</code></pre>
+<pre class="r"><code>sigma &lt;- sqrt(sum((sw - mean(sw))^2)/length(sw)) 
+sw_se &lt;- sqrt(sigma^2/30) 
+sw_se</code></pre>
+<pre><code>## [1] 4.078341</code></pre>
+<pre class="r"><code>upper &lt;- mean(sw) + qnorm(0.975, mean = 0, sd = 1) * sw_se
+lower &lt;- mean(sw) + qnorm(0.025, mean = 0, sd = 1) * sw_se  #ci with normal distribution
+ci &lt;- c(lower, upper)
+ci</code></pre>
+<pre><code>## [1] 141.5361 157.5229</code></pre>
 <pre class="r"><code>sa &lt;- sample(d$age, 30, replace = FALSE)
 mean(sa)</code></pre>
-<pre><code>## [1] 20.07333</code></pre>
-<pre class="r"><code>sqrt(sum((sa - mean(sa))^2)/length(sa))</code></pre>
-<pre><code>## [1] 2.447141</code></pre>
+<pre><code>## [1] 19.94772</code></pre>
+<pre class="r"><code>sigma &lt;- sqrt(sum((sa - mean(sa))^2)/length(sa))
+sa_se &lt;- sqrt(sigma^2/30) 
+sa_se</code></pre>
+<pre><code>## [1] 0.6241749</code></pre>
+<pre class="r"><code>upper &lt;- mean(sa) + qnorm(0.975, mean = 0, sd = 1) * sa_se
+lower &lt;- mean(sa) + qnorm(0.025, mean = 0, sd = 1) * sa_se  #ci with normal distribution
+ci &lt;- c(lower, upper)
+ci</code></pre>
+<pre><code>## [1] 18.72436 21.17108</code></pre>
 <pre class="r"><code>sz &lt;- sample(d$zombies_killed, 30, replace = FALSE)
 mean(sz)</code></pre>
-<pre><code>## [1] 3.2</code></pre>
-<pre class="r"><code>sqrt(sum((sz - mean(sz))^2)/length(sz))</code></pre>
-<pre><code>## [1] 1.620699</code></pre>
+<pre><code>## [1] 3.3</code></pre>
+<pre class="r"><code>sigma &lt;- sqrt(sum((sz - mean(sz))^2)/length(sz))
+sz_se &lt;- sqrt(sigma^2/30) 
+sz_se</code></pre>
+<pre><code>## [1] 0.2873248</code></pre>
+<pre class="r"><code>upper &lt;- mean(sz) + qnorm(0.975, mean = 0, sd = 1) * sz_se
+lower &lt;- mean(sz) + qnorm(0.025, mean = 0, sd = 1) * sz_se  #ci with normal distribution
+ci &lt;- c(lower, upper)
+ci</code></pre>
+<pre><code>## [1] 2.736854 3.863146</code></pre>
 <pre class="r"><code>sy &lt;- sample(d$years_of_education, 30, replace = FALSE)
 mean(sy)</code></pre>
-<pre><code>## [1] 2.566667</code></pre>
-<pre class="r"><code>sqrt(sum((sy - mean(sy))^2)/length(sy))</code></pre>
-<pre><code>## [1] 1.584999</code></pre>
+<pre><code>## [1] 2.866667</code></pre>
+<pre class="r"><code>sigma &lt;- sqrt(sum((sy - mean(sy))^2)/length(sy))
+sy_se &lt;- sqrt(sigma^2/30) 
+sy_se</code></pre>
+<pre><code>## [1] 0.2895718</code></pre>
+<pre class="r"><code>upper &lt;- mean(sy) + qnorm(0.975, mean = 0, sd = 1) * sy_se
+lower &lt;- mean(sy) + qnorm(0.025, mean = 0, sd = 1) * sy_se  #ci with normal distribution
+ci &lt;- c(lower, upper)
+ci</code></pre>
+<pre><code>## [1] 2.299116 3.434217</code></pre>
+<p>Note: Feels really tedious and I know there’s an easier way of doing
+it but unsure how to shorten the functions</p>
+</div>
+<div id="question-6" class="section level2">
+<h2>Question 6</h2>
+<pre class="r"><code>#Now draw 99 more random samples of 30 zombie apocalypse survivors, and calculate the mean for each variable for each of these samples. Together with the first sample you drew, you now have a set of 100 means for each variable (each based on 30 observations), which constitutes a sampling distribution for each variable. What are the means and standard deviations of this distribution of means for each variable? How do the standard deviations of means compare to the standard errors estimated in [5]? What do these sampling distributions look like (a graph might help here)? Are they normally distributed? What about for those variables that you concluded were not originally drawn from a normal distribution?</code></pre>
 </div>
 
 
