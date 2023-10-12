@@ -2,10 +2,15 @@
 title: "Amandafw_OriginalHomeworkCode_03"
 author: "Amanda Wu"
 date: "2023-10-09"
-output: html_document
+output: rmdformats::readthedown
+
 ---
 
-##uploading data into R
+![](/Users/amandawu/Downloads/Zombie.jpeg)
+
+
+
+## Uploading data into R
 ```{r Uploading Data}
 library(curl)
 f <- curl("https://github.com/fuzzyatelin/fuzzyatelin.github.io/blob/master/AN588_Fall23/zombies.csv")
@@ -131,6 +136,7 @@ Height, Weight, and Age appears to be drawn from a normal distribution as they s
 set.seed(1) #makes sure that the sample doesn't change each time
 sh <- sample(d$height, 30, replace = FALSE)
 m_sh <- mean(sh) #mean
+m_sh
 sigma <- sqrt(sum((sh - mean(sh))^2)/length(sh)) #sample standard deviation
 sigma
 sh_se <- sqrt(sigma^2/30) #standard error
@@ -142,6 +148,7 @@ ci
 
 sw <- sample(d$weight, 30, replace = FALSE)
 m_sw <- mean(sw)
+m_sw
 sigma <- sqrt(sum((sw - mean(sw))^2)/length(sw)) 
 sw_se <- sqrt(sigma^2/30) 
 sw_se
@@ -151,7 +158,8 @@ ci <- c(lower, upper)
 ci
 
 sa <- sample(d$age, 30, replace = FALSE)
-mean(sa)
+m_sa <- mean(sa)
+m_sa
 sigma <- sqrt(sum((sa - mean(sa))^2)/length(sa))
 sa_se <- sqrt(sigma^2/30) 
 sa_se
@@ -161,7 +169,7 @@ ci <- c(lower, upper)
 ci
 
 sz <- sample(d$zombies_killed, 30, replace = FALSE)
-mean(sz)
+m_sz <- mean(sz)
 sigma <- sqrt(sum((sz - mean(sz))^2)/length(sz))
 sz_se <- sqrt(sigma^2/30) 
 sz_se
@@ -170,7 +178,7 @@ ci <- quantile(sz, c(0.025, 0.975)) #determines ci without assuming normal distr
 ci 
 
 sy <- sample(d$years_of_education, 30, replace = FALSE)
-mean(sy)
+m_sy <- mean(sy)
 sigma <- sqrt(sum((sy - mean(sy))^2)/length(sy))
 sy_se <- sqrt(sigma^2/30) 
 sy_se
@@ -189,7 +197,7 @@ height_99 <- NULL
 for (i in 1:99) {
     height_99[i] <- mean(sample(d$height, size = 30, replace = FALSE))
 } #taken from mod 9, gets 99 random samples
-all_h <- height_99 + m_sh
+all_h <- c(height_99, m_sh)
 mean(all_h)
 sd(all_h)
 
@@ -197,7 +205,7 @@ weight_99 <- NULL
 for (i in 1:99) {
     weight_99[i] <- mean(sample(d$weight, size = 30, replace = FALSE))
 } #taken from mod 8, gets 99 random samples
-all_w <- weight_99 + m_sw
+all_w <- c(weight_99, m_sw)
 mean(all_w)
 sd(all_w)
 
@@ -205,7 +213,7 @@ age_99 <- NULL
 for (i in 1:99) {
     age_99[i] <- mean(sample(d$age, size = 30, replace = FALSE))
 } #taken from mod 8, gets 99 random samples
-all_a <- age_99 + mean(sa)
+all_a <- c(age_99, m_sa)
 mean(all_a)
 sd(all_a)
 
@@ -213,7 +221,7 @@ zombkill_99 <- NULL
 for (i in 1:99) {
     zombkill_99[i] <- mean(sample(d$zombies_killed, size = 30, replace = FALSE))
 } #taken from mod 8, gets 99 random samples
-all_z <- zombkill_99 + mean(sz)
+all_z <- c(zombkill_99, m_sz)
 mean(all_z)
 sd(all_z)
 
@@ -221,11 +229,9 @@ years_99 <- NULL
 for (i in 1:99) {
     years_99[i] <- mean(sample(d$years_of_education, size = 30, replace = FALSE))
 } #taken from mod 8, gets 99 random samples
-all_y <- years_99 + mean(sy)
+all_y <- c(years_99, m_sy)
 mean(all_y)
 sd(all_y)
-
 ```
-
-I found that the mean and standard deviation for all the variables had differed alot from the values in question 5. I originally assumed that the mean and sd for the 100 samples should be closer to the normal mean and sd of the whole population but it does not seem to be the case. I believe this issue may be due to my code as something must have gone wrong. The values seem really high compared to the other means and sds. 
+I had some issues with this question as originally, I wasn't adding the 99 samples and the previous sample correctly by using the code (Ex: all_w <- weight_99 + m_sw). Instead of giving 100 samples, it kept adding the previous sample onto each value from my loop. However, I received help in class and changed the code to (Ex:all_h <- c(height_99, m_sh)) so it enters everything into one vector so I can calculate the mean. Now, these sd and means are really close to the values calculated from question 5. 
 
