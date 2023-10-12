@@ -130,7 +130,7 @@ Height, Weight, and Age appears to be drawn from a normal distribution as they s
 #standard error is the standard deviation of the sampling distribution 
 set.seed(1) #makes sure that the sample doesn't change each time
 sh <- sample(d$height, 30, replace = FALSE)
-mean(sh) #mean
+m_sh <- mean(sh) #mean
 sigma <- sqrt(sum((sh - mean(sh))^2)/length(sh)) #sample standard deviation
 sigma
 sh_se <- sqrt(sigma^2/30) #standard error
@@ -141,7 +141,7 @@ ci <- c(lower, upper)
 ci
 
 sw <- sample(d$weight, 30, replace = FALSE)
-mean(sw)
+m_sw <- mean(sw)
 sigma <- sqrt(sum((sw - mean(sw))^2)/length(sw)) 
 sw_se <- sqrt(sigma^2/30) 
 sw_se
@@ -165,19 +165,17 @@ mean(sz)
 sigma <- sqrt(sum((sz - mean(sz))^2)/length(sz))
 sz_se <- sqrt(sigma^2/30) 
 sz_se
-upper <- mean(sz) + qnorm(0.975, mean = 0, sd = 1) * sz_se
-lower <- mean(sz) + qnorm(0.025, mean = 0, sd = 1) * sz_se  #ci with normal distribution
-ci <- c(lower, upper)
-ci
+quantile(sz)
+ci <- quantile(sz, c(0.025, 0.975)) #determines ci without assuming normal distribution
+ci 
 
 sy <- sample(d$years_of_education, 30, replace = FALSE)
 mean(sy)
 sigma <- sqrt(sum((sy - mean(sy))^2)/length(sy))
 sy_se <- sqrt(sigma^2/30) 
 sy_se
-upper <- mean(sy) + qnorm(0.975, mean = 0, sd = 1) * sy_se
-lower <- mean(sy) + qnorm(0.025, mean = 0, sd = 1) * sy_se  #ci with normal distribution
-ci <- c(lower, upper)
+quantile(sy)
+ci <- quantile(sy, c(0.025, 0.975)) #determines ci without assuming normal distribution
 ci
 ```
 Note: Feels really tedious and I know there's an easier way of doing it but unsure how to shorten the functions
@@ -186,9 +184,48 @@ Note: Feels really tedious and I know there's an easier way of doing it but unsu
 ## Question 6
 ```{r Question 6}
 #Now draw 99 more random samples of 30 zombie apocalypse survivors, and calculate the mean for each variable for each of these samples. Together with the first sample you drew, you now have a set of 100 means for each variable (each based on 30 observations), which constitutes a sampling distribution for each variable. What are the means and standard deviations of this distribution of means for each variable? How do the standard deviations of means compare to the standard errors estimated in [5]? What do these sampling distributions look like (a graph might help here)? Are they normally distributed? What about for those variables that you concluded were not originally drawn from a normal distribution?
+set.seed(1)
+height_99 <- NULL 
+for (i in 1:99) {
+    height_99[i] <- mean(sample(d$height, size = 30, replace = FALSE))
+} #taken from mod 9, gets 99 random samples
+all_h <- height_99 + m_sh
+mean(all_h)
+sd(all_h)
 
+weight_99 <- NULL 
+for (i in 1:99) {
+    weight_99[i] <- mean(sample(d$weight, size = 30, replace = FALSE))
+} #taken from mod 8, gets 99 random samples
+all_w <- weight_99 + m_sw
+mean(all_w)
+sd(all_w)
+
+age_99 <- NULL 
+for (i in 1:99) {
+    age_99[i] <- mean(sample(d$age, size = 30, replace = FALSE))
+} #taken from mod 8, gets 99 random samples
+all_a <- age_99 + mean(sa)
+mean(all_a)
+sd(all_a)
+
+zombkill_99 <- NULL 
+for (i in 1:99) {
+    zombkill_99[i] <- mean(sample(d$zombies_killed, size = 30, replace = FALSE))
+} #taken from mod 8, gets 99 random samples
+all_z <- zombkill_99 + mean(sz)
+mean(all_z)
+sd(all_z)
+
+years_99 <- NULL 
+for (i in 1:99) {
+    years_99[i] <- mean(sample(d$years_of_education, size = 30, replace = FALSE))
+} #taken from mod 8, gets 99 random samples
+all_y <- years_99 + mean(sy)
+mean(all_y)
+sd(all_y)
 
 ```
 
-
+I found that the mean and standard deviation for all the variables had differed alot from the values in question 5. I originally assumed that the mean and sd for the 100 samples should be closer to the normal mean and sd of the whole population but it does not seem to be the case. I believe this issue may be due to my code as something must have gone wrong. The values seem really high compared to the other means and sds. 
 
