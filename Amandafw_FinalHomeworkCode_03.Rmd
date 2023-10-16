@@ -1,0 +1,253 @@
+---
+title: "Amandafw_FinalHomeworkCode_03"
+author: "Amanda Wu"
+date: "`r Sys.Date()`"
+output: rmdformats::readthedown
+---
+
+
+![](/Users/amandawu/Downloads/Zombie.jpeg)
+
+
+## Uploading data into R
+```{r Uploading Data}
+library(curl)
+f <- curl("https://raw.githubusercontent.com/fuzzyatelin/fuzzyatelin.github.io/master/AN588_Fall23/zombies.csv")
+d <- read.csv(f, header = TRUE, sep = ",", stringsAsFactors = FALSE) #this is the typical path used in challenges but would give an error for me - "Error in open.connection(file, "rt")" or another error with the final code line
+#or 
+d <- read.csv("zombies.csv", header = TRUE, sep = ",", stringsAsFactors = FALSE) #this seemed to be more effective 
+head(d)
+summary(d)
+```
+    + you made a good point about the more effective line of code to read the csv file. it's the same code i used.  - Sofia
+
+
+## Question 1
+```{r Question 1}
+#Calculate the population mean and standard deviation for each quantitative random variable (height, weight, age, number of zombies killed, and years of education). NOTE: You will not want to use the built in var() and sd() commands as these are for samples.
+names(d)
+mean(d$height, na.rm = TRUE) #the mean for heights
+h <- d$height
+sqrt(sum((h - mean(h))^2)/length(h)) #pop standard deviation is the square root of the pop variance; population variance is the sum of squares divided by # of values
+
+mean(d$weight, na.rm = TRUE)
+w <- d$weight
+sqrt(sum((w - mean(w))^2)/length(w)) #pop sd
+
+mean(d$age, na.rm = TRUE)
+a <- d$age
+sqrt(sum((a - mean(a))^2)/length(a)) #pop sd
+
+mean(d$zombies_killed, na.rm = TRUE)
+z <- d$zombies_killed
+sqrt(sum((z - mean(z))^2)/length(z)) #pop sd
+
+mean(d$years_of_education, na.rm = TRUE)
+y <- d$years_of_education
+sqrt(sum((y - mean(y))^2)/length(y)) #pop sd
+```
+    + i calculated mean the same way as you, but the way you calculated sd was way more effective than what i did. i eventually figured out the more effective line of code that you used by the end of my Rmd. it was also smart to assign objects. i think it would've made my life easier later in the assignment if i had. - sofia
+
+## Question 2
+```{r Question 2}
+#Use {ggplot} to make boxplots of each of these variables by gender.
+library(ggplot2)
+names(d)
+
+h <- ggplot(data = d, aes(x = gender, y = height)) #ggplot requires entering the dataset and aes for the x and y plots
+h <- h + geom_boxplot() #this makes it a box plot
+h <- h + ylab("Height") + xlab("Gender") #renames the x and y axis titles
+
+w <- ggplot(data = d, aes(x = gender, y = weight))
+w <- w + geom_boxplot()
+w <- w + ylab("Weight") + xlab("Gender")
+
+a <- ggplot(data = d, aes(x = gender, y = age))
+a <- a + geom_boxplot()
+a <- a + ylab("Age") + xlab("Gender")
+
+z <- ggplot(data = d, aes(x = gender, y = zombies_killed))
+z <- z + geom_boxplot()
+z <- z + ylab("Zombies Killed") + xlab("Gender")
+
+y <- ggplot(data = d, aes(x = gender, y = years_of_education))
+y <- y + geom_boxplot()
+y <- y + ylab("Years of Education") + xlab("Gender")
+```
+Source: https://www.geeksforgeeks.org/draw-multiple-ggplot2-plots-side-by-side/
+Notes: the graphs look a little condensed though and I'm not too sure how to fix it or whether I should change it so each graph has their own space, however, the knitted code looks really long when I do this
+  + I decided to take the code out but this was what I had used to condense the graphs:
+    + library("gridExtra") #package i found to present all the graphs together
+    + grid.arrange(h, w, a, z, y, ncol = 2, nrow = 3) 
+
+  + this looks good. I did it essentially the same way but i have some extra lines of code to add theme and fill the graphs. you can also gropu the graphs together using the gather() function and faceting them. I think it's part of the tidyverse package but don't quote me on that. I didn't use it for this particular asssignment because it condenses *some* of the graphs since it makes them all the same y values. your graphs look really good though. small note - you might want to add some comments to this code. i know we've worked with ggplot() and box plots a good amount but it might help later on if you don't remember - sofia
+
+## Question 3
+```{r Question 3}
+#Use {ggplot} to make scatterplots of height and weight in relation to age. Do these variables seem to be related? In what way?
+p <- ggplot(data = d, aes(x = height, y = age)) #entering the data
+p <- p + xlab("Height") + ylab("Age")  #renaming the axis
+p <- p + geom_point()  #make a scatterplot
+p <- p + geom_smooth(method = "lm", fullrange = TRUE) #adding regression lines
+
+w <- ggplot(data = d, aes(x = weight, y = age)) #entering the data
+w <- w + xlab("Weight") + ylab("Age")  #renaming the axis
+w <- w + geom_point()  #make a scatterplot
+w <- w + geom_smooth(method = "lm", fullrange = TRUE)
+
+```
+There appears to be a more definitive correlation between height and age than weight and age but both variables generally increase with age. Both weight and height appears to be correlated with taller individuals typically having larger weights. 
+  + these look great. I didn't add a regression line to my graphs but I probably should. - Sofia
+
+## Question 4
+```{r Question 4}
+#Using histograms and Q-Q plots, check whether the quantitative variables seem to be drawn from a normal distribution. Which seem to be and which do not (hint: not all are drawn from the normal distribution)? For those that are not normal, can you determine from which common distribution they are drawn?
+summary(d)
+#creating histogram & Q-Q plots with height:
+hist(d$height, breaks = seq(from = 50, to = 85, by = 1), probability = TRUE, xlab = "Height", main = "Histogram for Height") #the breaks were determined with summary(d) from the min and the max values
+qqnorm(d$height, main = "Q-Q plot for Height")
+qqline(d$height, col = "red")
+
+#histogram for weight
+hist(d$weight, breaks = seq(from = 85, to = 215, by = 1), probability = TRUE, xlab = "Weight", main = "Histogram for Weight")
+qqnorm(d$weight, main = "Q-Q plot for Weight")
+qqline(d$weight, col = "red")
+
+#histogram for zombies killed
+hist(d$zombies_killed, breaks = seq(from = -5, to = 15, by = 1), probability = TRUE, xlab = "Zombies Killed", main = "Histogram for Zombies Killed")
+qqnorm(d$zombies_killed, main = "Q-Q plot for Zombies Killed")
+qqline(d$zombies_killed, col = "red")
+
+#histogram for age
+hist(d$age, breaks = seq(from = 5, to = 35, by = 1), probability = TRUE, xlab = "Age", main = "Histogram for Age")
+qqnorm(d$age, main = "Q-Q plot for Age")
+qqline(d$age, col = "red")
+
+#histogram for years of education
+hist(d$years_of_education, breaks = seq(from = -5, to = 13, by = 1), probability = TRUE, xlab = "Years of Education", main = "Histogram for Years of Education")
+qqnorm(d$years_of_education, main = "Q-Q plot for Years of Education")
+qqline(d$years_of_education, col = "red")
+```
+Height, Weight, and Age appears to be drawn from a normal distribution as they seem to adhere towards the line in the qqplots. In addition, their histograms appear similar to the normal distribution. Years of Education and Zombies Killed did not seem to be drawn from a normal distribution as their qq plots were really different and their histograms appear more similar to poission distributions.
+
+  + these look great and I did it essentially the same way, I didn't add breaks however. I'm not sure if they're necessary since all of my graphs look similar to yours? - Sofia
+
+## Question 5
+```{r Question 5}
+#Now use the sample() function to sample ONE subset of 30 zombie survivors (without replacement) from this population and calculate the mean and sample standard deviation for each variable. Also estimate the standard error for each variable, and construct the 95% confidence interval for each mean. Note that for the variables that are not drawn from the normal distribution, you may need to base your estimate of the CIs on slightly different code than for the normal…
+#standard error is the standard deviation of the sampling distribution 
+set.seed(1) #makes sure that the sample doesn't change each time
+sh <- sample(d$height, 30, replace = FALSE)
+m_sh <- mean(sh) #mean
+m_sh
+sigma <- sqrt(sum((sh - mean(sh))^2)/length(sh)) #sample standard deviation
+sigma
+sh_se <- sqrt(sigma^2/30) #standard error
+sh_se
+upper <- mean(sh) + qnorm(0.975, mean = 0, sd = 1) * sh_se
+lower <- mean(sh) + qnorm(0.025, mean = 0, sd = 1) * sh_se  #ci with normal distribution
+ci <- c(lower, upper)
+ci
+
+sw <- sample(d$weight, 30, replace = FALSE)
+m_sw <- mean(sw)
+m_sw
+sigma <- sqrt(sum((sw - mean(sw))^2)/length(sw)) 
+sw_se <- sqrt(sigma^2/30) 
+sw_se
+upper <- mean(sw) + qnorm(0.975, mean = 0, sd = 1) * sw_se
+lower <- mean(sw) + qnorm(0.025, mean = 0, sd = 1) * sw_se  #ci with normal distribution
+ci <- c(lower, upper)
+ci
+
+sa <- sample(d$age, 30, replace = FALSE)
+m_sa <- mean(sa)
+m_sa
+sigma <- sqrt(sum((sa - mean(sa))^2)/length(sa))
+sa_se <- sqrt(sigma^2/30) 
+sa_se
+upper <- mean(sa) + qnorm(0.975, mean = 0, sd = 1) * sa_se
+lower <- mean(sa) + qnorm(0.025, mean = 0, sd = 1) * sa_se  #ci with normal distribution
+ci <- c(lower, upper)
+ci
+
+sz <- sample(d$zombies_killed, 30, replace = FALSE)
+m_sz <- mean(sz)
+sigma <- sqrt(sum((sz - mean(sz))^2)/length(sz))
+sz_se <- sqrt(sigma^2/30) 
+sz_se
+quantile(sz)
+ci <- quantile(sz, c(0.025, 0.975)) #determines ci without assuming normal distribution
+ci 
+
+sy <- sample(d$years_of_education, 30, replace = FALSE)
+m_sy <- mean(sy)
+sigma <- sqrt(sum((sy - mean(sy))^2)/length(sy))
+sy_se <- sqrt(sigma^2/30) 
+sy_se
+quantile(sy)
+ci <- quantile(sy, c(0.025, 0.975)) #determines ci without assuming normal distribution
+ci
+```
+Note: Feels really tedious and I know there's an easier way of doing it but unsure how to shorten the functions
+
+   + this is exactly how i did it and felt the same way about an easier way. this question was such a pain honestly. great job - sofia 
+
+
+## Question 6
+```{r Question 6}
+#Now draw 99 more random samples of 30 zombie apocalypse survivors, and calculate the mean for each variable for each of these samples. Together with the first sample you drew, you now have a set of 100 means for each variable (each based on 30 observations), which constitutes a sampling distribution for each variable. What are the means and standard deviations of this distribution of means for each variable? How do the standard deviations of means compare to the standard errors estimated in [5]? What do these sampling distributions look like (a graph might help here)? Are they normally distributed? What about for those variables that you concluded were not originally drawn from a normal distribution?
+set.seed(1) #makes sure that it randomly generates one reponse
+height_99 <- NULL 
+for (i in 1:99) {
+    height_99[i] <- mean(sample(d$height, size = 30, replace = FALSE))
+} #taken from mod 9, gets 99 random samples; a loop for the 99 samples
+all_h <- c(height_99, m_sh) #puts the 99 samples and the previous random sample from question 5 into a vector
+mean(all_h) #calc mean
+sd(all_h) #calc sd 
+
+weight_99 <- NULL 
+for (i in 1:99) {
+    weight_99[i] <- mean(sample(d$weight, size = 30, replace = FALSE))
+} #taken from mod 8, gets 99 random samples
+all_w <- c(weight_99, m_sw)
+mean(all_w)
+sd(all_w)
+
+age_99 <- NULL 
+for (i in 1:99) {
+    age_99[i] <- mean(sample(d$age, size = 30, replace = FALSE))
+} #taken from mod 8, gets 99 random samples
+all_a <- c(age_99, m_sa)
+mean(all_a)
+sd(all_a)
+
+zombkill_99 <- NULL 
+for (i in 1:99) {
+    zombkill_99[i] <- mean(sample(d$zombies_killed, size = 30, replace = FALSE))
+} #taken from mod 8, gets 99 random samples
+all_z <- c(zombkill_99, m_sz)
+mean(all_z)
+sd(all_z)
+
+years_99 <- NULL 
+for (i in 1:99) {
+    years_99[i] <- mean(sample(d$years_of_education, size = 30, replace = FALSE))
+} #taken from mod 8, gets 99 random samples
+all_y <- c(years_99, m_sy)
+mean(all_y)
+sd(all_y)
+```
+I had some issues with this question as originally, I wasn't adding the 99 samples and the previous sample correctly by using the code (Ex: all_w <- weight_99 + m_sw). Instead of giving 100 samples, it kept adding the previous sample onto each value from my loop. However, I received help in class and changed the code to (Ex:all_h <- c(height_99, m_sh)) so it enters everything into one vector so I can calculate the mean. Now, these sd and means are really close to the values calculated from question 5. 
+
+  + great job! this question (and the last one) were a challenge for me. we approached our code the same way but I did not have a line of code where i specify i new object with vector c that contained the new sample and your mean value for each particular quantitative value. I tried this out on my code to see if it would make a difference but my numbers were essentially the same. What does this line of code do? - sofia 
+
+  + Your code looks great, Amanda! really straightforward for the most part. there were a lot of shortcuts you used that helped you out in the longrun that I think I will implement on my own code. your comments are helpful as well and informative. Great job!
+
+## Challenges in this code: 
+  + One of the biggest one was in question 6 where I didn't know how to combine the samples but it was almost an obvious solution once someone else explained it to me, I just didn't remember how to apply the older concepts into my own code
+  + I also originally had difficulty understanding how to calculate the population vs sample sd; if there wasn't a note in the question I probably would've done sd() but because the question clarified that sd() is for samples, I had to look further into the modules to understand the concepts
+  + I also had difficulty uploading the dataset into R at first because it kept saying that the final line of code was incomplete? I tried using different methods of uploading data into R from module 3 until I figured out the correct solution
+  + This homework assignment was super repetitive so the knitted version ended up being super long and I wanted to find a way of condensing the graphs. This led me to a new package found from an online source which helped me group all the ggplots together but I ended up not including it in my final code because it wasn't the most visually appealing and made the graphs a bit hard to read since it was condensed. If I had more free time to work on this assignment, I might've found a solution to this problem but for now my knitted html will unfortunately be super long :(
+  + I don't think I really understood the concepts of CI in the modules or even in class but doing this homework assignment really helped me better understand the topics by actually applying them into other situations where I am forced to find the answer; it took some time and googling but I think I was able to better grasp this topic after finishing this assignment :) 
+)
